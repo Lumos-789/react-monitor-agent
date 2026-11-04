@@ -1,0 +1,48 @@
+{
+  "name": "react-monitor-agent",
+  "version": "0.1.2",
+  "description": "Human-agent operation board built on review replay and checkpoints: the agent works, you replay a structured timeline and decide at key frames. The bundled skill guides your agent to clone the GitHub repo and run it — zero-dependency Node event service on :8790 plus React board on :5173, offline FIXTURE demo included.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "verify": "npm --prefix core test && npm --prefix app run check"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "skills/",
+    "assets/",
+    "README.md",
+    "README_CN.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "engines": {
+    "dsh": ">=0.2.1-rc.2 <0.3.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-skill-filesystem": ">=0.1.0-rc.6 <0.3.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lumos-789/react-monitor-agent"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "human-agent",
+    "review-replay",
+    "checkpoint",
+    "operation-board",
+    "agent-oversight"
+  ]
+}

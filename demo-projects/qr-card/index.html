@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二维码名片生成器 · 白底极简</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"
+        onerror="window.__qrCdnFailed=true"></script>
+<style>
+  :root {
+    --ink: #111111;
+    --ink-2: #555555;
+    --ink-3: #999999;
+    --line: #e5e5e5;
+    --paper: #ffffff;
+    --wash: #fafafa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Georgia, "Times New Roman", "Songti SC", "SimSun", serif;
+    background: var(--wash);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 24px;
+  }
+  .wrap { width: 100%; max-width: 920px; }
+  header { margin-bottom: 40px; }
+  header h1 {
+    font-size: 34px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+  }
+  header p {
+    margin-top: 10px;
+    color: var(--ink-3);
+    font-size: 14px;
+    font-style: italic;
+  }
+  .cols { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; }
+
+  form {
+    flex: 1 1 300px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 32px;
+  }
+  fieldset { border: none; }
+  label {
+    display: block;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--ink-2);
+    margin: 0 0 6px 2px;
+  }
+  input {
+    width: 100%;
+    font: inherit;
+    font-size: 16px;
+    padding: 8px 10px 9px 2px;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .2s;
+  }
+  input:focus { border-bottom-color: var(--ink); }
+  .field { margin-bottom: 26px; }
+  .field:last-child { margin-bottom: 0; }
+  .hint { margin-top: 24px; font-size: 12px; color: var(--ink-3); line-height: 1.7; }
+
+  .card {
+    flex: 1 1 360px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 44px 40px;
+    display: flex;
+    justify-content: space-between;
+    gap: 28px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.02);
+  }
+  .card .who { min-width: 0; }
+  .card .name {
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    word-break: break-all;
+  }
+  .card .name:empty::before,
+  .card .role:empty::before { content: " "; white-space: pre; }
+  .card .role {
+    margin-top: 10px;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--ink-2);
+    word-break: break-all;
+  }
+  .card .rule { width: 36px; height: 1px; background: var(--ink); margin: 22px 0; }
+  .card .link {
+    font-size: 13px;
+    color: var(--ink-3);
+    word-break: break-all;
+    line-height: 1.6;
+  }
+  .qr-box { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  #qrcode { width: 132px; height: 132px; display: block; }
+  .qr-fallback {
+    width: 132px; height: 132px;
+    border: 1px dashed var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-3);
+    padding: 8px;
+    line-height: 1.6;
+  }
+  .qr-caption { font-size: 10px; letter-spacing: 0.2em; color: var(--ink-3); }
+
+  .cdn-warn {
+    display: none;
+    margin-top: 28px;
+    border-left: 2px solid var(--ink);
+    background: var(--paper);
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.8;
+  }
+  .cdn-warn.show { display: block; }
+
+  footer { margin-top: 36px; font-size: 12px; color: var(--ink-3); letter-spacing: 0.08em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>二维码名片</h1>
+    <p>White &amp; Minimal — 衬线标题 · 黑白灰 · 单文件</p>
+  </header>
+
+  <div class="cols">
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <fieldset>
+        <div class="field">
+          <label for="f-name">名 字</label>
+          <input id="f-name" type="text" placeholder="如:沈知远" value="沈知远">
+        </div>
+        <div class="field">
+          <label for="f-role">职 位</label>
+          <input id="f-role" type="text" placeholder="如:独立开发者" value="独立开发者">
+        </div>
+        <div class="field">
+          <label for="f-link">链 接</label>
+          <input id="f-link" type="text" placeholder="https://(二维码指向的地址)" value="https://github.com">
+        </div>
+      </fieldset>
+      <p class="hint">输入即时刷新右侧名片预览;二维码由链接生成,建议使用完整 URL。</p>
+    </form>
+
+    <div class="card" id="card">
+      <div class="who">
+        <div class="name" id="v-name"></div>
+        <div class="role" id="v-role"></div>
+        <div class="rule"></div>
+        <div class="link" id="v-link"></div>
+      </div>
+      <div class="qr-box">
+        <div id="qr-mount"><canvas id="qrcode" width="132" height="132"></canvas></div>
+        <div class="qr-fallback" id="qr-fallback" hidden>二维码库未能加载<br>(离线 / CDN 不可达)</div>
+        <div class="qr-caption">SCAN ME</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cdn-warn" id="cdn-warn">
+    二维码生成库(CDN)当前不可用——可能处于离线环境或网络受限。名片文字部分不受影响;
+    二维码位以占位框与链接文字降级展示。恢复联网后刷新页面即可生成二维码。
+  </div>
+
+  <footer>QR CARD GENERATOR · SELF-CONTAINED SINGLE FILE</footer>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var nameEl = $('f-name'), roleEl = $('f-role'), linkEl = $('f-link');
+  var vName = $('v-name'), vRole = $('v-role'), vLink = $('v-link');
+  var mount = $('qr-mount'), fallback = $('qr-fallback'), warn = $('cdn-warn');
+  var qr = null, lastText = '';
+
+  function degrade() {
+    mount.hidden = true;
+    fallback.hidden = false;
+    warn.classList.add('show');
+  }
+
+  function ensureQr(text) {
+    if (qr) { qr.makeCode(text); return; }
+    mount.innerHTML = '';
+    qr = new QRCode(mount, {
+      text: text,
+      width: 132, height: 132,
+      colorDark: '#111111', colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  }
+
+  function drawQr(text) {
+    if (typeof QRCode === 'undefined') { degrade(); return; }
+    try {
+      ensureQr(text);
+      mount.hidden = false;
+      fallback.hidden = true;
+    } catch (e) { qr = null; degrade(); }
+  }
+
+  function checkCdn() {
+    if (typeof QRCode === 'undefined' || window.__qrCdnFailed) degrade();
+  }
+
+  function render() {
+    var n = nameEl.value.trim(), r = roleEl.value.trim(), l = linkEl.value.trim();
+    vName.textContent = n;
+    vRole.textContent = r;
+    vLink.textContent = l;
+    var target = l || (n ? n : '');
+    if (target && target !== lastText) {
+      lastText = target;
+      drawQr(target);
+    }
+    if (!target && lastText) { lastText = ''; degrade(); }
+    if (target && typeof QRCode !== 'undefined') { warn.classList.remove('show'); }
+  }
+
+  [nameEl, roleEl, linkEl].forEach(function (el) {
+    el.addEventListener('input', render);
+  });
+
+  checkCdn();
+  render();
+  window.addEventListener('load', function () { checkCdn(); render(); });
+})();
+</script>
+</body>
+</html>
