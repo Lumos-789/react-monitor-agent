@@ -1,6 +1,6 @@
 {
   "name": "rma-core",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "description": "react-monitor-agent core: localhost API + event store + checkpoint engine + decision reinjection (zero runtime deps)",
   "type": "module",

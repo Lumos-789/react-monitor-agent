@@ -62,7 +62,3 @@ context/entries.jsonl           # Context 条目日志(last-write-wins)
 - 分支:reject/redirect 关旧分支(closed 留痕,closedByDecisionId)+ 开新分支(main→b2→b3…);decision.made 事件带旧分支,其后事件带新分支。
 - deliver 时:sourceWorkId 指向该 work 的 draft Context 条目翻 accepted(入库=人审过);deliver 之后才 proposed 的条目保持 draft(与 demo fixture 一致)。
 - `fold.ts` 是纯函数导出(`rma-core/fold`),board 以 devDependency 复用同一状态机(tech-design D5)。
-
-## DSH 适配器
-
-`adapter/`——**P2 后置,本次不实现**,只有 README 说明三组件规划,见 `adapter/README.md`。

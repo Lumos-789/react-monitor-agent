@@ -1,6 +1,6 @@
 {
   "name": "react-monitor-agent",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Human-agent operation board built on review replay and checkpoints: the agent works, you replay a structured timeline and decide at key frames. The bundled skill guides your agent to clone the GitHub repo and run it — zero-dependency Node event service on :8790 plus React board on :5173, offline FIXTURE demo included.",
   "description_i18n": {
     "en": "Human-agent operation board built on review replay and checkpoints: the agent works, you replay a structured timeline and decide at key frames. The bundled skill guides your agent to clone the GitHub repo and run it — zero-dependency Node event service on :8790 plus React board on :5173, offline FIXTURE demo included.",
